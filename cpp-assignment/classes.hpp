@@ -27,17 +27,18 @@ class Car {
     Car(int id, std::string model, std::string number, float cost);
     static void create_new_car();
     static std::vector<Car> get_available_cars();
+    static std::vector<Car> get_all_cars();
     static void remove_car();
     static void update_car();
 
     const bool is_owner(int id);
     const bool is_rented();
 
-    bool rent(int id, int start_day, int start_month, int start_year, int end_day, int end_month, int end_year);
+    bool rent(int owner, int start_day, int start_month, int start_year, int end_day, int end_month, int end_year);
     bool return_car(int condition);
 
     float get_cost();
-    std::string display();
+    std::string display(int mode);
     int get_condition();
     int get_start_day();
     int get_start_month();
@@ -45,7 +46,10 @@ class Car {
     int get_end_day();
     int get_end_month();
     int get_end_year();
+
+    std::string get_start_date();
     std::string get_due_date();
+    std::string get_owner_name();
     int get_days_rented();
 
     bool operator==(const Car &other) const;
@@ -69,9 +73,11 @@ class Consumer : User {
     Consumer();
     Consumer(int id, std::string name, std::string password, int type);
     static void create_new_user();
+    static std::vector<Consumer> get_all_users();
+    static void remove_user();
+    static void update_user();
     static Consumer login(std::string name, std::string password);
 
-    bool rent_car(Car &car);
     std::vector<Car> get_rented_cars();
     void clear_due();
     void update_dues(float dues);
@@ -81,6 +87,9 @@ class Consumer : User {
     float get_fine_due();
     int get_max_capacity();
     float get_discount();
+    int get_record();
+    std::string get_name();
+    std::string display_welcome();
 
     bool operator==(const Consumer &other) const;
     friend std::ostream &operator<<(std::ostream &os, const Consumer &car);

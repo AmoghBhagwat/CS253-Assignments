@@ -88,6 +88,11 @@ std::vector<Car> Car::get_available_cars() {
     return available_cars;
 }
 
+std::vector<Car> Car::get_all_cars() {
+    Database<Car> car_db(CAR_FILENAME);
+    return car_db.load_all();
+}
+
 void Car::remove_car() {
     std::vector<Car> cars = Car::get_available_cars();
     if (cars.size() == 0) {
@@ -98,7 +103,7 @@ void Car::remove_car() {
     std::cout << "Available cars: " << std::endl;
     std::cout << "S.No\tModel\tNumber\tCost" << std::endl;
     for (int i = 0; i < cars.size(); i++) {
-        std::cout << i + 1 << "\t" << cars[i].display() << std::endl;
+        std::cout << i + 1 << "\t" << cars[i].display(0) << std::endl;
     }
 
     std::cout << "Enter the number of the car you want to remove: ";
@@ -132,7 +137,7 @@ void Car::update_car() {
     std::cout << "Available cars: " << std::endl;
     std::cout << "S.No\tModel\tNumber\tCost" << std::endl;
     for (int i = 0; i < cars.size(); i++) {
-        std::cout << i + 1 << "\t" << cars[i].display() << std::endl;
+        std::cout << i + 1 << "\t" << cars[i].display(0) << std::endl;
     }
 
     std::cout << "Enter the number of the car you want to update: ";
@@ -170,12 +175,12 @@ const bool Car::is_owner(const int id) { return (this->owner == id); }
 
 const bool Car::is_rented() { return (this->owner != -1); }
 
-bool Car::rent(int id, int start_day, int start_month, int start_year,
+bool Car::rent(int owner, int start_day, int start_month, int start_year,
                int end_day, int end_month, int end_year) {
     if (is_rented())
         return false;
     Car temp = *this;
-    temp.owner = id;
+    temp.owner = owner;
     temp.start_day = start_day;
     temp.start_month = start_month;
     temp.start_year = start_year;
@@ -210,12 +215,16 @@ bool Car::return_car(int condition) {
 
 float Car::get_cost() { return this->cost; }
 
-std::string Car::display() {
+std::string Car::display(int mode) { // mode 0 for booking, 1 for returning
     std::stringstream ss;
-    ss << std::fixed << std::setprecision(2) << this->cost;
-    std::string cost = ss.str();
+    if (mode == 0) {
+        ss << std::fixed << std::setprecision(2) << this->cost;
+        std::string cost = ss.str();
 
-    return this->model + "\t" + this->number + "\t" + cost;
+        return this->model + "\t" + this->number + "\t" + cost;
+    }
+    return this->model + "\t" + this->number + "\t" + this->get_start_date() +
+           "\t" + this->get_due_date();
 }
 
 int Car::get_condition() { return this->condition; }
@@ -232,12 +241,33 @@ int Car::get_end_month() { return this->end_month; }
 
 int Car::get_end_year() { return this->end_year; }
 
+std::string Car::get_start_date() {
+    std::stringstream ss;
+    ss << std::setfill('0') << std::setw(2) << this->start_day << '/'
+       << std::setfill('0') << std::setw(2) << this->start_month << '/'
+       << std::setfill('0') << std::setw(4) << this->start_year;
+    return ss.str();
+}
+
 std::string Car::get_due_date() {
     std::stringstream ss;
     ss << std::setfill('0') << std::setw(2) << this->end_day << '/'
        << std::setfill('0') << std::setw(2) << this->end_month << '/'
        << std::setfill('0') << std::setw(4) << this->end_year;
     return ss.str();
+}
+
+std::string Car::get_owner_name() {
+    Database<Consumer> consumer_db(CONSUMER_FILENAME);
+    std::vector<Consumer> consumers = consumer_db.load_all();
+
+    for (Consumer &consumer : consumers) {
+        if (consumer.get_id() == this->owner) {
+            return consumer.get_name();
+        }
+    }
+
+    return "Not rented";
 }
 
 int Car::get_days_rented() {
@@ -323,6 +353,92 @@ void Consumer::create_new_user() {
     std::cout << "Registered successfully!" << std::endl;
 }
 
+std::vector<Consumer> Consumer::get_all_users() {
+    Database<Consumer> consumer_db(CONSUMER_FILENAME);
+    return consumer_db.load_all();
+}
+
+void Consumer::remove_user() {
+    Database<Consumer> db(CONSUMER_FILENAME);
+    std::vector<Consumer> consumers = db.load_all();
+
+    if (consumers.size() == 0) {
+        std::cout << "No users available to remove" << std::endl;
+        return;
+    }
+
+    std::cout << "Available users: " << std::endl;
+    std::cout << "S.No\tName\tType\tRecord" << std::endl;
+    for (int i = 0; i < consumers.size(); i++) {
+        std::string type = (consumers[i].type == 0) ? "Employee" : "Customer";
+        std::cout << i + 1 << "\t" << consumers[i].name << "\t" << type
+                  << consumers[i].record << std::endl;
+    }
+
+    std::cout << "Enter the number of the user you want to remove: ";
+    int choice;
+    std::cin >> choice;
+    if (choice < 1 || choice > consumers.size()) {
+        std::cout << "Invalid choice" << std::endl;
+        return;
+    }
+
+    std::cout << "Are you sure you want to remove the user? (y/n): ";
+    char c;
+    std::cin >> c;
+    if (c != 'y') {
+        return;
+    }
+
+    db.remove(consumers[choice - 1]);
+    std::cout << "User removed successfully!" << std::endl;
+}
+
+void Consumer::update_user() {
+    Database<Consumer> db(CONSUMER_FILENAME);
+    std::vector<Consumer> consumers = db.load_all();
+
+    if (consumers.size() == 0) {
+        std::cout << "No users available to update" << std::endl;
+        return;
+    }
+
+    std::cout << "Available users: " << std::endl;
+    std::cout << "S.No\tName\tType\tRecord" << std::endl;
+    for (int i = 0; i < consumers.size(); i++) {
+        std::string type = (consumers[i].type == 0) ? "Employee" : "Customer";
+        std::cout << i + 1 << "\t" << consumers[i].name << "\t" << type
+                  << consumers[i].record << std::endl;
+    }
+
+    std::cout << "Enter the number of the user you want to update: ";
+    int choice;
+    std::cin >> choice;
+    if (choice < 1 || choice > consumers.size()) {
+        std::cout << "Invalid choice" << std::endl;
+        return;
+    }
+
+    std::cout << "Enter the new name of the user: ";
+    std::string name;
+    std::cin >> name;
+    std::cout << "Enter the new password of the user: ";
+    std::string password;
+    std::cin >> password;
+    std::cout << "Enter the new record of the user: ";
+    int record;
+    std::cin >> record;
+
+    Consumer temp = consumers[choice - 1];
+    temp.name = name;
+    temp.password = password;
+    temp.record = record;
+
+    db.update(consumers[choice - 1], temp);
+
+    std::cout << "User updated successfully!" << std::endl;
+}
+
 Consumer Consumer::login(std::string name, std::string password) {
     Database<Consumer> db(CONSUMER_FILENAME);
     std::vector<Consumer> match = db.search([&](const Consumer &consumer) {
@@ -350,7 +466,7 @@ std::istream &operator>>(std::istream &is, Consumer &consumer) {
 int Consumer::get_id() { return this->id; }
 
 int Consumer::get_max_capacity() {
-    return this->record / 20; // TODO: change this to a better formula
+    return this->record / 30; // TODO: change this to a better formula
 }
 
 void Consumer::update_dues(float dues) {
@@ -358,8 +474,6 @@ void Consumer::update_dues(float dues) {
     Consumer temp = consumer_db.search(
         [&](const Consumer &consumer) { return consumer.id == this->id; })[0];
     temp.fine_due += dues;
-
-    std::cout << "update dues to " << temp.fine_due << std::endl;
 
     consumer_db.update(*this, temp);
     *this = temp;
@@ -382,4 +496,44 @@ float Consumer::get_discount() {
     } else {
         return 0;
     }
+}
+
+int Consumer::get_record() {
+    Database<Consumer> consumer_db(CONSUMER_FILENAME);
+    Consumer temp = consumer_db.search(
+        [&](const Consumer &consumer) { return consumer.id == this->id; })[0];
+    *this = temp;
+
+    return this->record;
+}
+
+std::string Consumer::get_name() { return this->name; }
+
+std::string Consumer::display_welcome() {
+    Database<Consumer> consumer_db(CONSUMER_FILENAME);
+    Consumer temp = consumer_db.search(
+        [&](const Consumer &consumer) { return consumer.id == this->id; })[0];
+    *this = temp;
+
+    std::string text = "\t\tWelcome, " + this->get_name() + '\n';
+    text +=
+        "\t\tCars rented: " + std::to_string(this->get_rented_cars().size()) +
+        '\n';
+
+    std::string type = (this->type == 0) ? "Employee" : "Customer";
+
+    std::string cost;
+    std::stringstream ss;
+    ss << std::fixed << std::setprecision(2) << this->fine_due;
+    cost = ss.str();
+
+    text += "\t\tPayment due: " + cost + '\n';
+
+    text += "\t\t" + type + " Record (0-100): " + std::to_string(this->record) +
+            '\n';
+    text +=
+        "\t\tMax Cars Rentable: " + std::to_string(this->get_max_capacity()) +
+        '\n';
+
+    return text;
 }

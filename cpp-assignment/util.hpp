@@ -2,7 +2,7 @@
 #include <limits>
 #include <stddef.h>
 
-inline void finish() {
+inline void finish(Consumer* consumer) {
     std::cout << "Press enter to continue...";
     std::cin.get();
     std::cin.get();
@@ -14,6 +14,9 @@ inline void finish() {
     std::cout << "##                                           ##" << std::endl;
     std::cout << "###############################################" << std::endl;
     std::cout << std::endl;
+    if (consumer != nullptr) {
+        std::cout << consumer->display_welcome() << std::endl;
+    }
 }
 
 inline bool is_date_valid(int day, int month, int year) {
