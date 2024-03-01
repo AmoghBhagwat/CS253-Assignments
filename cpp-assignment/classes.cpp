@@ -94,16 +94,23 @@ std::vector<Car> Car::get_all_cars() {
 }
 
 void Car::remove_car() {
-    std::vector<Car> cars = Car::get_available_cars();
+    std::vector<Car> cars = Car::get_all_cars();
     if (cars.size() == 0) {
         std::cout << "No cars available to remove" << std::endl;
         return;
     }
 
     std::cout << "Available cars: " << std::endl;
-    std::cout << "S.No\tModel\tNumber\tCost" << std::endl;
+    std::cout << std::setw(20) << std::left << "S.No" << std::setw(20)
+              << std::left << "Model" << std::setw(20) << std::left << "Number"
+              << std::setw(20) << std::left << "Cost" << std::setw(20)
+              << std::left << "Condition" << std::setw(20) << std::left
+              << "Start Date" << std::setw(20) << std::left << "End Date"
+              << std::setw(20) << std::left << "Owner" << std::endl;
     for (int i = 0; i < cars.size(); i++) {
-        std::cout << i + 1 << "\t" << cars[i].display(0) << std::endl;
+        std::cout << std::setw(20) << std::left << i + 1;
+        cars[i].display(2);
+        std::cout << std::endl;
     }
 
     std::cout << "Enter the number of the car you want to remove: ";
@@ -111,6 +118,11 @@ void Car::remove_car() {
     std::cin >> choice;
     if (choice < 1 || choice > cars.size()) {
         std::cout << "Invalid choice" << std::endl;
+        return;
+    }
+
+    if (cars[choice - 1].is_rented()) {
+        std::cout << "Car is currently rented, cannot remove!" << std::endl;
         return;
     }
 
@@ -135,9 +147,16 @@ void Car::update_car() {
     }
 
     std::cout << "Available cars: " << std::endl;
-    std::cout << "S.No\tModel\tNumber\tCost" << std::endl;
+    std::cout << std::setw(20) << std::left << "S.No" << std::setw(20)
+              << std::left << "Model" << std::setw(20) << std::left << "Number"
+              << std::setw(20) << std::left << "Cost" << std::setw(20)
+              << std::left << "Condition" << std::setw(20) << std::left
+              << "Start Date" << std::setw(20) << std::left << "End Date"
+              << std::setw(20) << std::left << "Owner" << std::endl;
     for (int i = 0; i < cars.size(); i++) {
-        std::cout << i + 1 << "\t" << cars[i].display(0) << std::endl;
+        std::cout << std::setw(20) << std::left << i + 1;
+        cars[i].display(2);
+        std::cout << std::endl;
     }
 
     std::cout << "Enter the number of the car you want to update: ";
@@ -157,11 +176,15 @@ void Car::update_car() {
     std::cout << "Enter the new daily cost of renting the car: ";
     float cost;
     std::cin >> cost;
+    std::cout << "Enter the condition of the car (0-100): ";
+    int condition;
+    std::cin >> condition;
 
     Car temp = cars[choice - 1];
     temp.model = model;
     temp.number = number;
     temp.cost = cost;
+    temp.condition = condition;
 
     Database<Car> car_db(CAR_FILENAME);
     car_db.update(cars[choice - 1], temp);
@@ -215,16 +238,28 @@ bool Car::return_car(int condition) {
 
 float Car::get_cost() { return this->cost; }
 
-std::string Car::display(int mode) { // mode 0 for booking, 1 for returning
-    std::stringstream ss;
+void Car::display(
+    int mode) { // mode 0 for booking, 1 for returning, 2 for admin
     if (mode == 0) {
-        ss << std::fixed << std::setprecision(2) << this->cost;
-        std::string cost = ss.str();
-
-        return this->model + "\t" + this->number + "\t" + cost;
+        std::cout << std::setw(20) << std::left << this->model << std::setw(20)
+                  << std::left << this->number << std::setw(20) << std::left
+                  << this->cost << std::setw(20) << std::left
+                  << this->condition;
     }
-    return this->model + "\t" + this->number + "\t" + this->get_start_date() +
-           "\t" + this->get_due_date();
+    if (mode == 1) {
+        std::cout << std::setw(20) << std::left << this->model << std::setw(20)
+                  << std::left << this->number << std::setw(20) << std::left
+                  << this->get_start_date() << std::setw(20) << std::left
+                  << this->get_end_date();
+    }
+    if (mode == 2) {
+        std::cout << std::setw(20) << std::left << this->model << std::setw(20)
+                  << std::left << this->number << std::setw(20) << std::left
+                  << this->cost << std::setw(20) << std::left << this->condition
+                  << std::setw(20) << std::left << this->get_start_date()
+                  << std::setw(20) << std::left << this->get_end_date()
+                  << std::setw(20) << std::left << this->get_owner_name();
+    }
 }
 
 int Car::get_condition() { return this->condition; }
@@ -242,6 +277,8 @@ int Car::get_end_month() { return this->end_month; }
 int Car::get_end_year() { return this->end_year; }
 
 std::string Car::get_start_date() {
+    if (this->start_day == -1)
+        return "Not rented";
     std::stringstream ss;
     ss << std::setfill('0') << std::setw(2) << this->start_day << '/'
        << std::setfill('0') << std::setw(2) << this->start_month << '/'
@@ -249,7 +286,9 @@ std::string Car::get_start_date() {
     return ss.str();
 }
 
-std::string Car::get_due_date() {
+std::string Car::get_end_date() {
+    if (this->end_day == -1)
+        return "Not rented";
     std::stringstream ss;
     ss << std::setfill('0') << std::setw(2) << this->end_day << '/'
        << std::setfill('0') << std::setw(2) << this->end_month << '/'
@@ -342,8 +381,7 @@ void Consumer::create_new_user() {
             break;
     }
 
-    std::cout << "Enter your password: ";
-    std::cin >> password;
+    password = get_password();
     std::cout << "Enter 0 if you are an employee, 1 if you are a customer: ";
     std::cin >> type;
 
@@ -368,11 +406,12 @@ void Consumer::remove_user() {
     }
 
     std::cout << "Available users: " << std::endl;
-    std::cout << "S.No\tName\tType\tRecord" << std::endl;
+    std::cout << std::setw(20) << std::left << "S.No" << std::setw(20) << std::left
+              << "Name" << std::setw(20) << std::left << "Type" << std::setw(20)
+              << std::left << "Record" << std::setw(20) << std::left << "Dues" << std::endl;
     for (int i = 0; i < consumers.size(); i++) {
-        std::string type = (consumers[i].type == 0) ? "Employee" : "Customer";
-        std::cout << i + 1 << "\t" << consumers[i].name << "\t" << type
-                  << consumers[i].record << std::endl;
+        std::cout << std::setw(20) << std::left << i + 1;
+        consumers[i].display();
     }
 
     std::cout << "Enter the number of the user you want to remove: ";
@@ -380,6 +419,11 @@ void Consumer::remove_user() {
     std::cin >> choice;
     if (choice < 1 || choice > consumers.size()) {
         std::cout << "Invalid choice" << std::endl;
+        return;
+    }
+
+    if (consumers[choice - 1].get_rented_cars().size() > 0) {
+        std::cout << "User has rented cars, cannot remove!" << std::endl;
         return;
     }
 
@@ -404,11 +448,12 @@ void Consumer::update_user() {
     }
 
     std::cout << "Available users: " << std::endl;
-    std::cout << "S.No\tName\tType\tRecord" << std::endl;
+    std::cout << std::setw(20) << std::left << "S.No" << std::setw(20) << std::left
+              << "Name" << std::setw(20) << std::left << "Type" << std::setw(20)
+              << std::left << "Record" << std::setw(20) << std::left << "Dues" << std::endl;
     for (int i = 0; i < consumers.size(); i++) {
-        std::string type = (consumers[i].type == 0) ? "Employee" : "Customer";
-        std::cout << i + 1 << "\t" << consumers[i].name << "\t" << type
-                  << consumers[i].record << std::endl;
+        std::cout << std::setw(20) << std::left << i + 1;
+        consumers[i].display();
     }
 
     std::cout << "Enter the number of the user you want to update: ";
@@ -422,9 +467,7 @@ void Consumer::update_user() {
     std::cout << "Enter the new name of the user: ";
     std::string name;
     std::cin >> name;
-    std::cout << "Enter the new password of the user: ";
-    std::string password;
-    std::cin >> password;
+    std::string password = get_password();
     std::cout << "Enter the new record of the user: ";
     int record;
     std::cin >> record;
@@ -505,6 +548,11 @@ int Consumer::get_record() {
     *this = temp;
 
     return this->record;
+}
+
+void Consumer::display() {
+    std::string type = (this->type == 0) ? "Employee" : "Customer";
+    std::cout << std::setw(20) << std::left << this->name << std::setw(20) << std::left << type << std::setw(20) << std::left << this->record << std::setw(20) << std::left << this->fine_due << std::endl;
 }
 
 std::string Consumer::get_name() { return this->name; }

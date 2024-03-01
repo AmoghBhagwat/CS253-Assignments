@@ -15,8 +15,7 @@ Consumer login() {
     std::string password;
     std::cout << "Enter your name: ";
     std::cin >> name;
-    std::cout << "Enter your password: ";
-    std::cin >> password;
+    password = get_password();
     try {
         return Consumer::login(name, password);
     } catch (std::invalid_argument &e) {
@@ -46,9 +45,12 @@ void rent_car(Consumer consumer) {
     }
 
     std::cout << "Available cars: " << std::endl;
-    std::cout << "S.No\tModel\tNumber\tCost" << std::endl;
+    std::cout << std::setw(20) << std::left << "S.No" << std::setw(20) << std::left << "Model" << std::setw(20) << std::left << "Number" << std::setw(20) << std::left << "Cost" << std::setw(20) << std::left << "Condition"
+              << std::endl;
     for (int i = 0; i < cars.size(); i++) {
-        std::cout << i + 1 << "\t" << cars[i].display(0) << std::endl;
+        std::cout << std::setw(20) << std::left << i + 1;
+        cars[i].display(0);
+        std::cout << std::endl;
     }
 
     std::cout << "Enter the serial number of the car you want to rent: ";
@@ -61,7 +63,7 @@ void rent_car(Consumer consumer) {
 
     int start_day, start_month, start_year;
     do {
-        std::cout << "Enter the day you want to rent the car: ";
+        std::cout << "Enter the day of month you want to rent the car: ";
         std::cin >> start_day;
         std::cout << "Enter the month you want to rent the car: ";
         std::cin >> start_month;
@@ -76,7 +78,7 @@ void rent_car(Consumer consumer) {
     int end_day, end_month, end_year;
     while (days <= 0) {
         do {
-            std::cout << "Enter the day you want to return the car: ";
+            std::cout << "Enter the day of month you want to return the car: ";
             std::cin >> end_day;
             std::cout << "Enter the month you want to return the car: ";
             std::cin >> end_month;
@@ -122,9 +124,12 @@ void return_car(Consumer consumer) {
     }
 
     std::cout << "Rented cars: " << std::endl;
-    std::cout << "S.No\tModel\tNumber\tStart Date\tEnd Date" << std::endl;
+    std::cout << std::setw(20) << std::left << "S.No" << std::setw(20) << std::left << "Model" << std::setw(20) << std::left << "Number" << std::setw(20) << std::left << "Start Date" << std::setw(20) << std::left << "End Date"
+              << std::endl;
     for (int i = 0; i < cars.size(); i++) {
-        std::cout << i + 1 << "\t" << cars[i].display(1) << std::endl;
+        std::cout << std::setw(20) << std::left << i + 1;
+        cars[i].display(1);
+        std::cout << std::endl;
     }
 
     std::cout << "Enter the serial number of the car you want to return: ";
@@ -168,7 +173,7 @@ void return_car(Consumer consumer) {
 
     int end_day, end_month, end_year;
     do {
-        std::cout << "Enter the day of return: ";
+        std::cout << "Enter the day of month of return: ";
         std::cin >> end_day;
         std::cout << "Enter the month of return: ";
         std::cin >> end_month;
@@ -195,7 +200,7 @@ void return_car(Consumer consumer) {
                       << cars[choice - 1].get_start_year() << std::endl;
 
             do {
-                std::cout << "Enter the day of return: ";
+                std::cout << "Enter the day of month of return: ";
                 std::cin >> end_day;
                 std::cout << "Enter the month of return: ";
                 std::cin >> end_month;
@@ -266,10 +271,12 @@ void view_rented_cars(Consumer consumer) {
         return;
     }
 
-    std::cout << "Rented cars: " << std::endl;
-    std::cout << "S.No\tModel\tNumber\tStart Date\tEnd Date" << std::endl;
+    std::cout << std::setw(20) << std::left << "S.No" << std::setw(20) << std::left << "Model" << std::setw(20) << std::left << "Number" << std::setw(20) << std::left << "Start Date" << std::setw(20) << std::left << "End Date"
+              << std::endl;
     for (int i = 0; i < cars.size(); i++) {
-        std::cout << i + 1 << "\t" << cars[i].display(1) << std::endl;
+        std::cout << std::setw(20) << std::left << i + 1;
+        cars[i].display(1);
+        std::cout << std::endl;
     }
 }
 
@@ -338,12 +345,12 @@ void post_manager_login() {
                 std::cout << "No cars available" << std::endl;
             } else {
                 std::cout << "Available cars: " << std::endl;
-                std::cout << "S.No\tModel\tNumber\tCost\tCondition\tOwner"
-                          << std::endl;
+                std::cout << std::setw(20) << std::left << "S.No" << std::setw(20) << std::left << "Model" << std::setw(20) << std::left << "Number" << std::setw(20) << std::left << "Cost" << std::setw(20) << std::left << "Condition" << std::setw(20) << std::left << "Start Date" << std::setw(20) << std::left << "End Date"
+                          << std::setw(20) << std::left << "Owner" << std::endl;
                 for (int i = 0; i < cars.size(); i++) {
-                    std::cout << i + 1 << "\t" << cars[i].display(0) << "\t"
-                              << cars[i].get_condition() << "\t"
-                              << cars[i].get_owner_name() << std::endl;
+                    std::cout << std::setw(20) << std::left << i + 1;
+                    cars[i].display(2);
+                    std::cout << std::endl;
                 }
             }
             break;
@@ -367,17 +374,18 @@ void post_manager_login() {
                 std::cout << "No users available" << std::endl;
             } else {
                 std::cout << "Available users: " << std::endl;
-                std::cout << "S.No\tName\tDues\tRecord" << std::endl;
+                std::cout << std::setw(20) << std::left << "S.No" << std::setw(20) << std::left << "Name" << std::setw(20) << std::left << "Type" << std::setw(20) << std::left << "Record" << std::setw(20) << std::left << "Dues"
+                          << std::endl;
                 for (int i = 0; i < consumers.size(); i++) {
-                    std::cout << i + 1 << "\t" << consumers[i].get_name() << "\t"
-                              << consumers[i].get_fine_due() << "\t"
-                              << consumers[i].get_record() << std::endl;
+                    std::cout << std::setw(20) << std::left << i + 1;
+                    consumers[i].display();
                 }
             }
             break;
         }
         case 8:
             std::cout << "Logged out successfully!" << std::endl;
+            finish(nullptr);
             return;
         default:
             std::cout << "Invalid choice" << std::endl;
@@ -430,8 +438,7 @@ int main() {
             std::string username, password;
             std::cout << "Enter username: ";
             std::cin >> username;
-            std::cout << "Enter password: ";
-            std::cin >> password;
+            password = get_password();
             if (username == ADMIN_USERNAME && password == ADMIN_PASSWORD) {
                 std::cout << "Logged in successfully!" << std::endl;
                 finish(nullptr);

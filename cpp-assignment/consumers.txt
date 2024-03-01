@@ -1,1 +1,5 @@
-1 amogh amogh 0 90 4800
+1 Amogh amogh123 1 100 0
+2 Srujan srujan123 1 100 0
+3 Nevish nevu123 1 100 0
+4 Harshit hars1234 1 100 0
+5 Anaswar anaswar013 0 100 0

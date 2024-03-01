@@ -1,6 +1,24 @@
 #include <iostream>
 #include <limits>
 #include <stddef.h>
+#include <string>
+#include <termios.h>
+#include <unistd.h>
+#include <stdio.h>
+
+inline std::string get_password() {
+    std::string password;
+    std::cout << "Enter password: ";
+    termios oldt;
+    tcgetattr(STDIN_FILENO, &oldt);
+    termios newt = oldt;
+    newt.c_lflag &= ~ECHO;
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    std::cin >> password;
+    std::cout << std::endl;
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    return password;
+}
 
 inline void finish(Consumer* consumer) {
     std::cout << "Press enter to continue...";
@@ -25,7 +43,7 @@ inline bool is_date_valid(int day, int month, int year) {
     }
 
     if (month == 2) {
-        if (year % 4 == 0) {
+        if (year % 4 == 0 && year % 100 != 0) {
             if (day > 29) {
                 return false;
             }

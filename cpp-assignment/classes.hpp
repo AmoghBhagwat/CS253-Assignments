@@ -38,7 +38,7 @@ class Car {
     bool return_car(int condition);
 
     float get_cost();
-    std::string display(int mode);
+    void display(int mode);
     int get_condition();
     int get_start_day();
     int get_start_month();
@@ -48,7 +48,7 @@ class Car {
     int get_end_year();
 
     std::string get_start_date();
-    std::string get_due_date();
+    std::string get_end_date();
     std::string get_owner_name();
     int get_days_rented();
 
@@ -88,6 +88,7 @@ class Consumer : User {
     int get_max_capacity();
     float get_discount();
     int get_record();
+    void display();
     std::string get_name();
     std::string display_welcome();
 
