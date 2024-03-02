@@ -7,9 +7,6 @@
 #include <string>
 #include <vector>
 
-const std::string ADMIN_USERNAME = "admin";
-const std::string ADMIN_PASSWORD = "admin";
-
 Consumer login() {
     std::string name;
     std::string password;
@@ -45,8 +42,10 @@ void rent_car(Consumer consumer) {
     }
 
     std::cout << "Available cars: " << std::endl;
-    std::cout << std::setw(20) << std::left << "S.No" << std::setw(20) << std::left << "Model" << std::setw(20) << std::left << "Number" << std::setw(20) << std::left << "Cost" << std::setw(20) << std::left << "Condition"
-              << std::endl;
+    std::cout << std::setw(20) << std::left << "S.No" << std::setw(20)
+              << std::left << "Model" << std::setw(20) << std::left << "Number"
+              << std::setw(20) << std::left << "Cost" << std::setw(20)
+              << std::left << "Condition" << std::endl;
     for (int i = 0; i < cars.size(); i++) {
         std::cout << std::setw(20) << std::left << i + 1;
         cars[i].display(0);
@@ -124,8 +123,10 @@ void return_car(Consumer consumer) {
     }
 
     std::cout << "Rented cars: " << std::endl;
-    std::cout << std::setw(20) << std::left << "S.No" << std::setw(20) << std::left << "Model" << std::setw(20) << std::left << "Number" << std::setw(20) << std::left << "Start Date" << std::setw(20) << std::left << "End Date"
-              << std::endl;
+    std::cout << std::setw(20) << std::left << "S.No" << std::setw(20)
+              << std::left << "Model" << std::setw(20) << std::left << "Number"
+              << std::setw(20) << std::left << "Start Date" << std::setw(20)
+              << std::left << "End Date" << std::endl;
     for (int i = 0; i < cars.size(); i++) {
         std::cout << std::setw(20) << std::left << i + 1;
         cars[i].display(1);
@@ -271,8 +272,10 @@ void view_rented_cars(Consumer consumer) {
         return;
     }
 
-    std::cout << std::setw(20) << std::left << "S.No" << std::setw(20) << std::left << "Model" << std::setw(20) << std::left << "Number" << std::setw(20) << std::left << "Start Date" << std::setw(20) << std::left << "End Date"
-              << std::endl;
+    std::cout << std::setw(20) << std::left << "S.No" << std::setw(20)
+              << std::left << "Model" << std::setw(20) << std::left << "Number"
+              << std::setw(20) << std::left << "Start Date" << std::setw(20)
+              << std::left << "End Date" << std::endl;
     for (int i = 0; i < cars.size(); i++) {
         std::cout << std::setw(20) << std::left << i + 1;
         cars[i].display(1);
@@ -330,57 +333,32 @@ void post_manager_login() {
 
         switch (choice) {
         case 0:
-            Car::create_new_car();
+            Manager::add_car();
             break;
         case 1:
-            Car::remove_car();
+            Manager::remove_car();
             break;
         case 2:
-            Car::update_car();
+            Manager::update_car();
             break;
         case 3: {
-            std::vector<Car> cars = Car::get_all_cars();
-
-            if (cars.size() == 0) {
-                std::cout << "No cars available" << std::endl;
-            } else {
-                std::cout << "Available cars: " << std::endl;
-                std::cout << std::setw(20) << std::left << "S.No" << std::setw(20) << std::left << "Model" << std::setw(20) << std::left << "Number" << std::setw(20) << std::left << "Cost" << std::setw(20) << std::left << "Condition" << std::setw(20) << std::left << "Start Date" << std::setw(20) << std::left << "End Date"
-                          << std::setw(20) << std::left << "Owner" << std::endl;
-                for (int i = 0; i < cars.size(); i++) {
-                    std::cout << std::setw(20) << std::left << i + 1;
-                    cars[i].display(2);
-                    std::cout << std::endl;
-                }
-            }
+            Manager::display_cars();
             break;
         }
         case 4: {
-            Consumer::create_new_user();
+            Manager::add_user();
             break;
         }
         case 5: {
-            Consumer::remove_user();
+            Manager::remove_user();
             break;
         }
         case 6: {
-            Consumer::update_user();
+            Manager::update_user();
             break;
         }
         case 7: {
-            std::vector<Consumer> consumers = Consumer::get_all_users();
-
-            if (consumers.size() == 0) {
-                std::cout << "No users available" << std::endl;
-            } else {
-                std::cout << "Available users: " << std::endl;
-                std::cout << std::setw(20) << std::left << "S.No" << std::setw(20) << std::left << "Name" << std::setw(20) << std::left << "Type" << std::setw(20) << std::left << "Record" << std::setw(20) << std::left << "Dues"
-                          << std::endl;
-                for (int i = 0; i < consumers.size(); i++) {
-                    std::cout << std::setw(20) << std::left << i + 1;
-                    consumers[i].display();
-                }
-            }
+            Manager::display_users();
             break;
         }
         case 8:
@@ -405,7 +383,7 @@ int main() {
 
     while (true) {
         std::cout << "Choose:\n0 for registering a new user\n1 for user "
-                     "login\n2 for manager login\n";
+                     "login\n2 for manager login\n3 for exit\n";
         std::cout << "Enter your choice: ";
         int choice;
         std::cin >> choice;
@@ -439,7 +417,7 @@ int main() {
             std::cout << "Enter username: ";
             std::cin >> username;
             password = get_password();
-            if (username == ADMIN_USERNAME && password == ADMIN_PASSWORD) {
+            if (username == Manager::get_username() && password == Manager::get_password()) {
                 std::cout << "Logged in successfully!" << std::endl;
                 finish(nullptr);
                 post_manager_login();
@@ -449,6 +427,9 @@ int main() {
             }
             break;
         }
+        case 3:
+            std::cout << "Exiting..." << std::endl;
+            return 0;
         default:
             std::cout << "Invalid choice" << std::endl;
             finish(nullptr);

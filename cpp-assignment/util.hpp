@@ -1,10 +1,10 @@
 #include <iostream>
 #include <limits>
 #include <stddef.h>
+#include <stdio.h>
 #include <string>
 #include <termios.h>
 #include <unistd.h>
-#include <stdio.h>
 
 inline std::string get_password() {
     std::string password;
@@ -20,7 +20,7 @@ inline std::string get_password() {
     return password;
 }
 
-inline void finish(Consumer* consumer) {
+inline void finish(Consumer *consumer) {
     std::cout << "Press enter to continue...";
     std::cin.get();
     std::cin.get();

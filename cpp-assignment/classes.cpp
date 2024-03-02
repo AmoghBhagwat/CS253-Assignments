@@ -406,9 +406,10 @@ void Consumer::remove_user() {
     }
 
     std::cout << "Available users: " << std::endl;
-    std::cout << std::setw(20) << std::left << "S.No" << std::setw(20) << std::left
-              << "Name" << std::setw(20) << std::left << "Type" << std::setw(20)
-              << std::left << "Record" << std::setw(20) << std::left << "Dues" << std::endl;
+    std::cout << std::setw(20) << std::left << "S.No" << std::setw(20)
+              << std::left << "Name" << std::setw(20) << std::left << "Type"
+              << std::setw(20) << std::left << "Record" << std::setw(20)
+              << std::left << "Dues" << std::endl;
     for (int i = 0; i < consumers.size(); i++) {
         std::cout << std::setw(20) << std::left << i + 1;
         consumers[i].display();
@@ -448,9 +449,10 @@ void Consumer::update_user() {
     }
 
     std::cout << "Available users: " << std::endl;
-    std::cout << std::setw(20) << std::left << "S.No" << std::setw(20) << std::left
-              << "Name" << std::setw(20) << std::left << "Type" << std::setw(20)
-              << std::left << "Record" << std::setw(20) << std::left << "Dues" << std::endl;
+    std::cout << std::setw(20) << std::left << "S.No" << std::setw(20)
+              << std::left << "Name" << std::setw(20) << std::left << "Type"
+              << std::setw(20) << std::left << "Record" << std::setw(20)
+              << std::left << "Dues" << std::endl;
     for (int i = 0; i < consumers.size(); i++) {
         std::cout << std::setw(20) << std::left << i + 1;
         consumers[i].display();
@@ -552,7 +554,9 @@ int Consumer::get_record() {
 
 void Consumer::display() {
     std::string type = (this->type == 0) ? "Employee" : "Customer";
-    std::cout << std::setw(20) << std::left << this->name << std::setw(20) << std::left << type << std::setw(20) << std::left << this->record << std::setw(20) << std::left << this->fine_due << std::endl;
+    std::cout << std::setw(20) << std::left << this->name << std::setw(20)
+              << std::left << type << std::setw(20) << std::left << this->record
+              << std::setw(20) << std::left << this->fine_due << std::endl;
 }
 
 std::string Consumer::get_name() { return this->name; }
@@ -584,4 +588,60 @@ std::string Consumer::display_welcome() {
         '\n';
 
     return text;
+}
+
+std::string Manager::get_username() { return "admin"; }
+
+std::string Manager::get_password() { return "admin"; }
+
+void Manager::add_car() { Car::create_new_car(); }
+
+void Manager::remove_car() { Car::remove_car(); }
+
+void Manager::update_car() { Car::update_car(); }
+
+void Manager::display_cars() {
+    std::vector<Car> cars = Car::get_all_cars();
+
+    if (cars.size() == 0) {
+        std::cout << "No cars available" << std::endl;
+    } else {
+        std::cout << "Available cars: " << std::endl;
+        std::cout << std::setw(20) << std::left << "S.No" << std::setw(20)
+                  << std::left << "Model" << std::setw(20) << std::left
+                  << "Number" << std::setw(20) << std::left << "Cost"
+                  << std::setw(20) << std::left << "Condition" << std::setw(20)
+                  << std::left << "Start Date" << std::setw(20) << std::left
+                  << "End Date" << std::setw(20) << std::left << "Owner"
+                  << std::endl;
+        for (int i = 0; i < cars.size(); i++) {
+            std::cout << std::setw(20) << std::left << i + 1;
+            cars[i].display(2);
+            std::cout << std::endl;
+        }
+    }
+}
+
+void Manager::add_user() { Consumer::create_new_user(); }
+
+void Manager::remove_user() { Consumer::remove_user(); }
+
+void Manager::update_user() { Consumer::update_user(); }
+
+void Manager::display_users() {
+    std::vector<Consumer> consumers = Consumer::get_all_users();
+
+    if (consumers.size() == 0) {
+        std::cout << "No users available" << std::endl;
+    } else {
+        std::cout << "Available users: " << std::endl;
+        std::cout << std::setw(20) << std::left << "S.No" << std::setw(20)
+                  << std::left << "Name" << std::setw(20) << std::left << "Type"
+                  << std::setw(20) << std::left << "Record" << std::setw(20)
+                  << std::left << "Dues" << std::endl;
+        for (int i = 0; i < consumers.size(); i++) {
+            std::cout << std::setw(20) << std::left << i + 1;
+            consumers[i].display();
+        }
+    }
 }

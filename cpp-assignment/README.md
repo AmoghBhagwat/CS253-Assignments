@@ -19,17 +19,22 @@ sudo chmod +x start.sh
 ```
 
 ## Running the Program
-The database is pre-populated with 5 users and 5 cars initially. 1 of the users is an Employee and the rest 4 are Customers. There is always only 1 admin in the system. The login details of the users provided initially is as follows.
+The database is pre-populated with 5 employees, 5 customers and 5 cars initially. There is always only 1 manager in the system. The login details of the users provided initially is as follows.
 
-| Name | Password |
-| ---- | -------- |
-| Amogh | amogh123 |
-| Srujan | srujan123 |
-| Nevish | nevu123 |
-| Harshit | hars123 |
-| Anaswar | anaswar013|
+| Name | Password | Type |
+| ---- | -------- | ---- |
+| Amogh | amogh123 | Customer |
+| Srujan | srujan123 | Customer |
+| Nevish | nevu123 | Customer |
+| Harshit | hars123 | Customer |
+| Anaswar | anaswar013 | Customer |
+| Raghav | raghav123 | Employee |
+| Ananya | ananya123 | Employee |
+| Khushi | khushi123 | Employee |
+| Srishti | srishti213 | Employee |
+| Debraj | debraj123 | Employee |
 
-Admin details - 
+Manager details - 
 - Username - ```admin```
 - Password - ```admin```
 

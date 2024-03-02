@@ -34,7 +34,8 @@ class Car {
     const bool is_owner(int id);
     const bool is_rented();
 
-    bool rent(int owner, int start_day, int start_month, int start_year, int end_day, int end_month, int end_year);
+    bool rent(int owner, int start_day, int start_month, int start_year,
+              int end_day, int end_month, int end_year);
     bool return_car(int condition);
 
     float get_cost();
@@ -95,4 +96,20 @@ class Consumer : User {
     bool operator==(const Consumer &other) const;
     friend std::ostream &operator<<(std::ostream &os, const Consumer &car);
     friend std::istream &operator>>(std::istream &is, Consumer &car);
+};
+
+class Manager : User {
+  public:
+    static std::string get_username();
+    static std::string get_password();
+
+    static void add_car();
+    static void remove_car();
+    static void update_car();
+    static void display_cars();
+
+    static void add_user();
+    static void remove_user();
+    static void update_user();
+    static void display_users();
 };

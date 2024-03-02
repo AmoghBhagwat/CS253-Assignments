@@ -2,4 +2,9 @@
 2 Srujan srujan123 1 100 0
 3 Nevish nevu123 1 100 0
 4 Harshit hars1234 1 100 0
-5 Anaswar anaswar013 0 100 0
+5 Anaswar anaswar013 1 100 0
+6 Raghav raghav123 0 100 0
+7 Ananya ananya123 0 100 0
+8 Khushi khushi123 0 100 0
+9 Srishti srishti123 0 100 0
+10 Debraj debraj123 0 100 0
