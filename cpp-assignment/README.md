@@ -6,7 +6,7 @@ The code is written and tested on a Linux-based operating system and few functio
 
 - Clearing the screen might not work on Windows. To fix this, replace the line ```system("clear")``` by ```system("cls")``` in the ```finish()``` function in the file ```utils.hpp```
 - Password input might not work, since the code needed for hiding the password is platform-dependent.
-- Inputting non numeric data in fields where number is expected causes undefined behaviour. Please do not enter non numeric data where number is expected, as the program may crash or run into infinite loop.
+- Inputs with spaces is not supported. If you want to use spaces, please use underscore (_) to do so.
 
 ## Setup Instructions
 Clone this repository using the command

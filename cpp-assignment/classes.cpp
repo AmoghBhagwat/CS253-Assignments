@@ -67,6 +67,8 @@ void Car::create_new_car() {
     std::cin >> number;
     std::cout << "Enter the daily cost of renting the car: ";
     std::cin >> cost;
+    if (check_numeric_input())
+        return;
 
     Car car(id, model, number, cost);
     db.insert(car);
@@ -116,6 +118,9 @@ void Car::remove_car() {
     std::cout << "Enter the number of the car you want to remove: ";
     int choice;
     std::cin >> choice;
+    if (check_numeric_input())
+        return;
+
     if (choice < 1 || choice > cars.size()) {
         std::cout << "Invalid choice" << std::endl;
         return;
@@ -162,6 +167,9 @@ void Car::update_car() {
     std::cout << "Enter the number of the car you want to update: ";
     int choice;
     std::cin >> choice;
+    if (check_numeric_input())
+        return;
+
     if (choice < 1 || choice > cars.size()) {
         std::cout << "Invalid choice" << std::endl;
         return;
@@ -176,9 +184,14 @@ void Car::update_car() {
     std::cout << "Enter the new daily cost of renting the car: ";
     float cost;
     std::cin >> cost;
+    if (check_numeric_input())
+        return;
+
     std::cout << "Enter the condition of the car (0-100): ";
     int condition;
     std::cin >> condition;
+    if (check_numeric_input())
+        return;
 
     Car temp = cars[choice - 1];
     temp.model = model;
@@ -384,6 +397,8 @@ void Consumer::create_new_user() {
     password = get_password();
     std::cout << "Enter 0 if you are an employee, 1 if you are a customer: ";
     std::cin >> type;
+    if (check_numeric_input())
+        return;
 
     Consumer consumer(id, name, password, type);
     db.insert(consumer);
@@ -418,6 +433,9 @@ void Consumer::remove_user() {
     std::cout << "Enter the number of the user you want to remove: ";
     int choice;
     std::cin >> choice;
+    if (check_numeric_input())
+        return;
+
     if (choice < 1 || choice > consumers.size()) {
         std::cout << "Invalid choice" << std::endl;
         return;
@@ -461,6 +479,9 @@ void Consumer::update_user() {
     std::cout << "Enter the number of the user you want to update: ";
     int choice;
     std::cin >> choice;
+    if (check_numeric_input())
+        return;
+
     if (choice < 1 || choice > consumers.size()) {
         std::cout << "Invalid choice" << std::endl;
         return;
@@ -473,6 +494,8 @@ void Consumer::update_user() {
     std::cout << "Enter the new record of the user: ";
     int record;
     std::cin >> record;
+    if (check_numeric_input())
+        return;
 
     Consumer temp = consumers[choice - 1];
     temp.name = name;

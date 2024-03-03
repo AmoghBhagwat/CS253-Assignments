@@ -20,6 +20,17 @@ inline std::string get_password() {
     return password;
 }
 
+inline bool check_numeric_input() {
+    if (std::cin.fail()) {
+        std::cin.clear();
+        std::cin.ignore(1000, '\n');
+        std::cout << "Please enter numerical value!" << std::endl;
+
+        return true;
+    }
+    return false;
+}
+
 inline void finish(Consumer *consumer) {
     std::cout << "Press enter to continue...";
     std::cin.get();

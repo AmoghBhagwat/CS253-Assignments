@@ -55,6 +55,9 @@ void rent_car(Consumer consumer) {
     std::cout << "Enter the serial number of the car you want to rent: ";
     int choice;
     std::cin >> choice;
+    if (check_numeric_input())
+        return;
+
     if (choice < 1 || choice > cars.size()) {
         std::cout << "Invalid choice" << std::endl;
         return;
@@ -64,10 +67,19 @@ void rent_car(Consumer consumer) {
     do {
         std::cout << "Enter the day of month you want to rent the car: ";
         std::cin >> start_day;
+        if (check_numeric_input())
+            continue;
+
         std::cout << "Enter the month you want to rent the car: ";
         std::cin >> start_month;
+        if (check_numeric_input())
+            continue;
+
         std::cout << "Enter the year you want to rent the car: ";
         std::cin >> start_year;
+        if (check_numeric_input())
+            continue;
+
         if (!is_date_valid(start_day, start_month, start_year)) {
             std::cout << "Invalid date!" << std::endl;
         }
@@ -79,10 +91,19 @@ void rent_car(Consumer consumer) {
         do {
             std::cout << "Enter the day of month you want to return the car: ";
             std::cin >> end_day;
+            if (check_numeric_input())
+                continue;
+
             std::cout << "Enter the month you want to return the car: ";
             std::cin >> end_month;
+            if (check_numeric_input())
+                continue;
+
             std::cout << "Enter the year you want to return the car: ";
             std::cin >> end_year;
+            if (check_numeric_input())
+                continue;
+
             if (!is_date_valid(end_day, end_month, end_year)) {
                 std::cout << "Invalid date!" << std::endl;
             }
@@ -136,6 +157,9 @@ void return_car(Consumer consumer) {
     std::cout << "Enter the serial number of the car you want to return: ";
     int choice;
     std::cin >> choice;
+    if (check_numeric_input())
+        return;
+
     if (choice < 1 || choice > cars.size()) {
         std::cout << "Invalid choice" << std::endl;
         return;
@@ -151,6 +175,9 @@ void return_car(Consumer consumer) {
     std::cout << "What is the condition of the car (0-100): ";
     int condition;
     std::cin >> condition;
+    if (check_numeric_input())
+        return;
+
     if (condition < 0 || condition > 100) {
         std::cout << "Invalid condition" << std::endl;
         return;
@@ -176,10 +203,22 @@ void return_car(Consumer consumer) {
     do {
         std::cout << "Enter the day of month of return: ";
         std::cin >> end_day;
+        if (check_numeric_input())
+            continue;
+        ;
+
         std::cout << "Enter the month of return: ";
         std::cin >> end_month;
+        if (check_numeric_input())
+            continue;
+        ;
+
         std::cout << "Enter the year of return: ";
         std::cin >> end_year;
+        if (check_numeric_input())
+            continue;
+        ;
+
         if (!is_date_valid(end_day, end_month, end_year)) {
             std::cout << "Invalid date!" << std::endl;
         }
@@ -203,10 +242,22 @@ void return_car(Consumer consumer) {
             do {
                 std::cout << "Enter the day of month of return: ";
                 std::cin >> end_day;
+                if (check_numeric_input())
+                    continue;
+                ;
+
                 std::cout << "Enter the month of return: ";
                 std::cin >> end_month;
+                if (check_numeric_input())
+                    continue;
+                ;
+
                 std::cout << "Enter the year of return: ";
                 std::cin >> end_year;
+                if (check_numeric_input())
+                    continue;
+                ;
+
                 if (!is_date_valid(end_day, end_month, end_year)) {
                     std::cout << "Invalid date!" << std::endl;
                 }
@@ -293,6 +344,9 @@ void post_user_login(Consumer consumer) {
         int choice;
         std::cin >> choice;
 
+        if (check_numeric_input())
+            continue;
+
         switch (choice) {
         case 0:
             rent_car(consumer);
@@ -330,6 +384,9 @@ void post_manager_login() {
 
         int choice;
         std::cin >> choice;
+
+        if (check_numeric_input())
+            continue;
 
         switch (choice) {
         case 0:
@@ -388,12 +445,8 @@ int main() {
         int choice;
         std::cin >> choice;
 
-        if (std::cin.fail()) {
-            std::cin.clear();
-            std::cin.ignore(1000, '\n');
-            std::cout << "Invalid input" << std::endl;
+        if (check_numeric_input())
             continue;
-        }
 
         switch (choice) {
         case 0:
@@ -417,7 +470,8 @@ int main() {
             std::cout << "Enter username: ";
             std::cin >> username;
             password = get_password();
-            if (username == Manager::get_username() && password == Manager::get_password()) {
+            if (username == Manager::get_username() &&
+                password == Manager::get_password()) {
                 std::cout << "Logged in successfully!" << std::endl;
                 finish(nullptr);
                 post_manager_login();
